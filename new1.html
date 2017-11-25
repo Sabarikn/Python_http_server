@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+  <title>My Paint</title>
+  <!-- Link for the Icon list used  (google icon list)-->
+  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  </head>
+    <style>
+    body{
+      background-color: rgb(25,104,105);
+    }
+    .block{
+      background: rgb(25,104,105);
+      width: 1000px;
+      height: 40px;
+    }
+      .solid {
+        margin: 10px;
+      border: 3px solid;
+      border-top-color:"black"  }
+    </style>
+<div class="block" >
+    <select>
+    <option value="1">1</option>
+    <option value="4">4</option>
+    <option value="6">6</option>
+    <option value="8">8</option>
+    <option value="10">10</option>
+    <option value="12">12</option>
+    <option value="14">14</option>    
+    <option value="16">16</option> 
+
+  </select>      
+
+  <input id="color"  type="color" name="favcolor">
+  <button class="marg1" id="fill"><i class="material-icons">format_color_fill</i></</button>
+  <button id="eraser" style="color: black" ><i class="material-icons" >crop_16_9</i></button>
+  <button id="reset" style="color: black" ><i class="material-icons" >rotate_right</i></button>
+  </div>
+  <body>
+      <canvas id="myCanvas" style="background-color: rgb(255,255,255);" class="solid" width="900" height="575" ></canvas>
+<script>
+var size = document.querySelector("select");
+var eraser=document.querySelector("#eraser");
+var reset=document.querySelector("#reset");
+var flag=1;
+var canvas = document.getElementById('myCanvas');
+var context = canvas.getContext('2d');
+var color=document.querySelector("#color");
+//eraser function implemented by changing the color of brush same as the canvas backgroundn color
+eraser.addEventListener("click",eraser_on );
+function eraser_on(){
+  flag=0;
+  context.strokeStyle=canvas.style.backgroundColor;
+}
+//reset function
+reset.addEventListener("click",function(){
+  context.clearRect(0,0,canvas.width,canvas.height);
+});
+//mouse co-ordinates initialised to (0,0)
+var mouse = {x: 0, y: 0};
+ //tracking the mouse pointer 
+canvas.addEventListener('mousemove', function(e) {
+  mouse.x = e.pageX - this.offsetLeft;
+  mouse.y = e.pageY - this.offsetTop;
+});
+context.lineWidth = size.value;
+context.lineJoin = 'round';
+context.lineCap = size.value;
+context.strokeStyle = color.value;
+ 
+canvas.addEventListener('mousedown', function(e) {
+    context.beginPath();
+    context.moveTo(mouse.x, mouse.y);
+ //paint function activates when the mouse clicked and moves without being released
+    canvas.addEventListener('mousemove', onPaint);
+});
+ 
+canvas.addEventListener('mouseup',function() {
+  //paint function deactivated when mouse is released
+    canvas.removeEventListener('mousemove', onPaint);
+});
+//the paint function
+var onPaint = function(e) {
+    context.lineTo(e.pageX - this.offsetLeft,e.pageY - this.offsetTop );
+    context.stroke();
+};
+//select colour from the color picker input and initially set as black and when changed it is set as drawing color (in eraser function it is set as background color(fixed))
+    color.value="rgb(0,0,0)"
+    color.addEventListener('input',initial);
+
+    color.addEventListener('change',changeColor);
+    function initial(event){
+      flag=1;
+      context.strokeStyle = event.target.value;
+    }
+
+
+    function changeColor(event){
+            flag=1;                            //flag used to avoid the fill function while eraser is running
+            context.strokeStyle = event.target.value;
+            context.strokeStyle = event.target.value;
+    }
+    fill=document.querySelector("#fill");  //fill color in recently drawn shape it will be a closed path always 
+    fill.addEventListener("click",function(event){
+     if(flag==1){
+      context.fillStyle=color.value;
+      context.fill();
+    }
+    })
+    size.addEventListener('input',function(event){
+      context.lineWidth=size.value;
+    });
+</script>
+</body>
+</html>           
