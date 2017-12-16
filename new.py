@@ -1,6 +1,6 @@
 import socket,os,sys,time
 
-host,port="",7673
+host,port="",7677
 server_sock=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 server_sock.getsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
 server_sock.bind((host,port))
@@ -47,7 +47,6 @@ def server():
         http_response = """\
 HTTP/1.1 200 OK
 Content-Type:"""+content_type[file_type]+"""
-Content-Length:"""+str(len(lines))+"""
 
 """+lines    
       else:
